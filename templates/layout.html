@@ -1,0 +1,30 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} |Pastebin</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<script type=text/javascript src="{{ config.JUGGERNAUT_DRIVER }}"></script>
+<script type=text/javascript src="{{ url_for('static', filename='jquery.js') }}"></script>
+<script type=text/javascript src="{{ url_for('static', filename='pastebin.js') }}"></script>
+<script type=text/javascript>
+  pastebin.urlRoot = {{ request.url_root|tojson|safe }};
+{%- if g.user %}
+  pastebin.subscribeUser({{ g.user.id }});
+{%- endif %}
+</script>
+<div class=page>
+  <h1 style="text-align:center;">Pastebin</h1>
+  <ul class=nav>
+    <li class="spana"><a href="{{ url_for('new_paste') }}">New Paste</a>
+    {% if g.user %}
+    <li class="spana"><a href="{{ url_for('my_pastes') }}">My Pastes</a>
+    <li class="spana"><a href="{{ url_for('logout') }}">Sign out ({{ g.user.display_name }})</a>
+    {% else %}
+    <li class="spana"><a href="{{ url_for('login') }}">Sign in with Facebook</a>
+    {% endif %}
+  </ul>
+  {% for message in get_flashed_messages() %}
+    <p class=flash>{{ message }}
+  {% endfor %}
+  {% block body %}{% endblock %}
+</div>
+<div style="display:block;text-align:center;font-family:'monotype';"><h6>&copy;Letting Henry</h6> </div>
